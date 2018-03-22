@@ -1,0 +1,63 @@
+
+NAME
+
+       ARKCoS
+
+       Artifact-suppressed accelerated radial kernel convolution on
+       the sphere
+
+
+DESCRIPTION
+
+       This algorithm is designed to efficiently convolve pixelated
+       maps on the sphere with radially symmetric kernels with compact
+       support. For a full description, see
+       https://arxiv.org/abs/1104.0672. It is written in C++/CUDA and
+       provides two independent code paths to do the necessary
+       computation either on conventional hardware (CPUs), or on
+       graphics processing units (GPUs). The latter code sections were
+       optimized for optimal performance on NVIDIA GeForce GTX 480
+       graphics cards. The code was originally developed and tested
+       using the CUDA toolkit version 3.2 and later ported to comply
+       with the updated API of version 9.
+
+
+INSTALLATION
+
+       Prerequisites: - Healpix (C++ installation)
+                      - libpsht
+                      - FFTW3 (single precision library)
+                      - CUDA
+
+       Adapt the 'Makefile' to your compilers. Paths to necessary
+       header files as well as static libraries can be passed to the
+       build script in the environment variables INCLUDE and
+       LIBRARY_PATH, respectively, following the standard Linux syntax
+       (i.e., as list with entries sparated by colons). The algorithm
+       requires the libpsht library to be installed
+       (https://sourceforge.net/projects/libpsht). The 'datatypes.h'
+       header file is part of the libcxxsupport library and currently
+       distributed with Healpix.
+
+
+USAGE
+
+       Maps are expected to be provided in Healpix fits format using
+       the RING storage scheme. Files used as convolution kernels
+       should be white space separated two-column ASCII tables, the
+       first column specifying the angle in radians (0 <= theta <=
+       pi), the second column the associated amplitude of the properly
+       normalized kernel. Adapt the driver 'arkcos_main.cxx' to
+       specify the file names for input and output maps and the
+       convolution kernel. Change the call to the initialization
+       routine for the 'par' variable to reflect the resolution of
+       the provided map. If the variable 'par.do_gpu' is set to
+       'true', the convolution will be computed on the GPU, otherwise
+       the CPU is used.
+
+       Warning: There are no checks implemented that explicitly verify
+       that all input files and parameters provided by the user are
+       self-consistent!
+
+       Please cite https://arxiv.org/abs/1104.0672 if you make use of
+       this algorithm in scientific publications.
